@@ -17,10 +17,27 @@ namespace ScheduleManager
 
         private static String[] loadedFile;
         private static Dictionary<String, Dictionary<String, String>> fileContents;
+        private static Label[] week1;
+        private static Label[] week2;
+        private static Label[] week3;
+        private static Label[] week4;
+        private static Label[] week5;
 
         public ScheduleManager()
         {
             InitializeComponent();
+
+            week1 = new Label[] { week1Label, week1Sunday, week1Monday, week1Tuesday, week1Wednesday,
+                                  week1Thursday, week1Friday, week1Saturday, week1Total };
+            week2 = new Label[] { week2Label, week2Sunday, week2Monday, week2Tuesday, week2Wednesday,
+                                  week2Thursday, week2Friday, week2Saturday, week2Total };
+            week3 = new Label[] { week3Label, week3Sunday, week3Monday, week3Tuesday, week3Wednesday,
+                                  week3Thursday, week3Friday, week3Saturday, week3Total };
+            week4 = new Label[] { week4Label, week4Sunday, week4Monday, week4Tuesday, week4Wednesday,
+                                  week4Thursday, week4Friday, week4Saturday, week4Total };
+            week5 = new Label[] { week5Label, week5Sunday, week5Monday, week5Tuesday, week5Wednesday,
+                                  week5Thursday, week5Friday, week5Saturday, week5Total };
+
             InitializeData();
         }
 
@@ -70,9 +87,11 @@ namespace ScheduleManager
 
         public static void LoadData()
         {
-            fileContents = new Dictionary<string, Dictionary<string, string>>();
+            fileContents = new Dictionary<String, Dictionary<String, String>>();
             for (int i = 1; i < loadedFile.Length-2; i += 5)
             {
+                String date = loadedFile[i].Substring(3);
+                date = date.Substring(0, date.Length - 4);
                 String startTime = loadedFile[i + 1].Substring(18);
                 startTime = startTime.Substring(0, startTime.Length - 2);
                 String endTime = loadedFile[i + 2].Substring(16);
@@ -85,8 +104,29 @@ namespace ScheduleManager
                     { "endTime", endTime },
                     { "totalTime", totalTime }
                 };
-                fileContents.Add(loadedFile[i], weekContents);
+                fileContents.Add(date, weekContents);
             }
+            UpdateDisplay();
+        }
+
+        public static void UpdateDisplay()
+        {
+            String[] keyIndex = fileContents.Keys.ToArray();
+
+            week1[0].Text = keyIndex[0];
+            week2[0].Text = keyIndex[1];
+            week3[0].Text = keyIndex[2];
+            week4[0].Text = keyIndex[3];
+            if (fileContents.Keys.Count == 4)
+            {
+                foreach (Label l in week5)
+                {
+                    l.Enabled = false;
+                }
+            }
+            else week5[0].Text = keyIndex[4];
+
+
         }
     }
 }
